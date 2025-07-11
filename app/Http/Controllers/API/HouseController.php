@@ -22,22 +22,43 @@ class HouseController extends Controller
         return $this->successResponse('House retrieved successfully', $house);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'bedrooms' => 'required|integer',
-            'bathrooms' => 'required|integer',
-            'area' => 'required|integer',
-            'address' => 'required',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'location' => 'nullable|string|max:255',
+        'address' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'price' => 'required|numeric',
 
-        $house = House::create($request->all());
-        return $this->successResponse('House created successfully', $house);
+        'rooms_number' => 'nullable|integer',
+        'baths_number' => 'nullable|integer',
+        'floors_number' => 'nullable|integer',
+        'ground_distance' => 'nullable|integer',
+        'building_age' => 'nullable|integer',
+
+        'main_features' => 'nullable|array',
+        'main_features.*' => 'string',
+
+        'is_furnitured' => 'nullable|boolean',
+        'is_rent' => 'nullable|boolean',
+        'is_sell' => 'nullable|boolean',
+
+        'img_url' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    $data = $request->except('img_url');
+
+    if ($request->hasFile('img_url')) {
+        $path = $request->file('img_url')->store('houses', 'public');
+        $data['img_url'] = asset('storage/' . $path);
     }
 
+    $house = House::create($data);
+
+    return $this->successResponse('House created successfully', $house);
+}
+    
     public function update(Request $request, House $house)
     {
         $house->update($request->all());
