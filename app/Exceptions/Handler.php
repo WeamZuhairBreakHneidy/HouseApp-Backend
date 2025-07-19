@@ -8,6 +8,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 class Handler extends ExceptionHandler
 {
     // existing $dontReport and $dontFlash
@@ -45,6 +46,13 @@ public function render($request, Throwable $exception)
             ], 500);
         }
 
+          if ($exception instanceof ModelNotFoundException) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Resource not found',
+            'data' => null,
+        ], 404);
+    }
         $statusCode = $exception instanceof HttpExceptionInterface
             ? $exception->getStatusCode()
             : 500;

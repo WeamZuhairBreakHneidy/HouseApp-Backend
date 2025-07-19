@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('title');
             $table->string('location')->nullable();
             $table->string('address');
-            $table->string('img_url')->nullable();
+            $table->text('img_url')->nullable();
             $table->text('description')->nullable();
             $table->integer('price');
 

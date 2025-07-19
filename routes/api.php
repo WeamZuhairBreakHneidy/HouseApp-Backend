@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HouseController;
+use App\Http\Controllers\API\FeaturedHouseController;
+
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,3 +22,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/houses/{house}', [HouseController::class, 'destroy']);
     });
 });
+
+// Public GET
+Route::get('featured-houses', [FeaturedHouseController::class, 'index']);
+Route::get('featured-houses/{featuredHouse}', [FeaturedHouseController::class, 'show']);
+
+// Admin-only CRUD
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('featured-houses', [FeaturedHouseController::class, 'store']);
+    Route::put('featured-houses/{featuredHouse}', [FeaturedHouseController::class, 'update']);
+        Route::delete('featured-houses/{id}', [FeaturedHouseController::class, 'destroy']);
+});
+

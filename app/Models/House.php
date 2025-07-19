@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class House extends Model
 {
@@ -18,5 +17,6 @@ class House extends Model
         'is_furnitured' => 'boolean',
         'is_rent' => 'boolean',
         'is_sell' => 'boolean',
+        'img_url' => 'array',
     ];
 }
