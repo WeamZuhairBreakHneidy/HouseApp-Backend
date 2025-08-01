@@ -5,6 +5,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HouseController;
 use App\Http\Controllers\API\FeaturedHouseController;
 
+use App\Http\Controllers\API\ArchitectController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -34,3 +35,14 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::delete('featured-houses/{id}', [FeaturedHouseController::class, 'destroy']);
 });
 
+
+// 🟢 متاحة للجميع
+Route::get('/architects', [ArchitectController::class, 'index']);
+Route::get('/architects/{id}', [ArchitectController::class, 'show']);
+
+// 🔴 للأدمن فقط
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/architects', [ArchitectController::class, 'store']);
+    Route::put('/architects/{id}', [ArchitectController::class, 'update']);
+    Route::delete('/architects/{id}', [ArchitectController::class, 'destroy']);
+});
