@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Architect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ArchitectController extends Controller
 {
@@ -84,4 +85,35 @@ class ArchitectController extends Controller
             'data' => $architect,
         ]);
     }
+
+
+
+    public function destroy($id)
+{
+    $architect = Architect::find($id);
+
+    if (!$architect) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Architect not found',
+        ], 404);
+    }
+
+    // 🧹 Delete image from storage if exists
+    if (is_array($architect->img_url) && isset($architect->img_url['image'])) {
+        $imageUrl = $architect->img_url['image'];
+        $path = str_replace(asset('storage') . '/', '', $imageUrl);
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+    }
+
+    $architect->delete();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Architect deleted successfully',
+    ]);
+}
+
 }
