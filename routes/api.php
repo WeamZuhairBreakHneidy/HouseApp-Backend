@@ -6,7 +6,7 @@ use App\Http\Controllers\API\HouseController;
 use App\Http\Controllers\API\FeaturedHouseController;
 
 use App\Http\Controllers\API\ArchitectController;
-
+use App\Http\Controllers\API\OtherController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/houses/search', [HouseController::class, 'search']);
@@ -46,3 +46,21 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::put('/architects/{id}', [ArchitectController::class, 'update']);
     Route::delete('/architects/{id}', [ArchitectController::class, 'destroy']);
 });
+
+
+// Public search
+Route::get('/others/search', [OtherController::class, 'search']);
+
+// Public index
+Route::get('/others', [OtherController::class, 'index']);
+
+// Public single item
+Route::get('/others/{other}', [OtherController::class, 'show']);
+
+// Admin only
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/others', [OtherController::class, 'store']);
+    Route::put('/others/{other}', [OtherController::class, 'update']);
+    Route::delete('/others/{other}', [OtherController::class, 'destroy']);
+});
+
